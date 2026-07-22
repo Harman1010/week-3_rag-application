@@ -1,0 +1,14 @@
+.env
+.env.*
+
+.venv/
+venv/
+env/
+
+__pycache__/
+
+thumbs.db
+
+faiss/
+faiss_index/
+index/
