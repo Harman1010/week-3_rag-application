@@ -1,11 +1,11 @@
-from config import GEMINI_MODEL
+from config import GROQ_MODEL
 
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_groq import ChatGroq
 
 def load_llm():
 
-    return ChatGoogleGenerativeAI(
-        model = GEMINI_MODEL,
+    return ChatGroq(
+        model=GROQ_MODEL,
         temperature=0.2
     )
 
