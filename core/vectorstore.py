@@ -1,17 +1,31 @@
 from langchain_community.vectorstores import FAISS
 
 from core.chunker import chunking
-
 from core.embeddings import embeddings
 
-def storage(text:str)->FAISS:
+from config import VECTOR_DB_PATH
 
+DB_PATH = VECTOR_DB_PATH
+
+
+def create_vectorstore(text: str) -> FAISS:
+    
     chunks = chunking(text)
 
-    vector_store = FAISS.from_texts(
-        texts = chunks,
-        embedding = embeddings
+    return FAISS.from_texts(
+        texts=chunks,
+        embedding=embeddings,
     )
 
-    return vector_store
 
+def save_vectorstore(vector_store: FAISS):
+
+    vector_store.save_local(DB_PATH)
+
+
+def load_vectorstore() -> FAISS:
+    return FAISS.load_local(
+        DB_PATH,
+        embeddings,
+        allow_dangerous_deserialization=True,
+    )

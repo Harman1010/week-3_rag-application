@@ -1,5 +1,7 @@
 import os
 
+from pathlib import Path
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -22,3 +24,9 @@ Instructions:
 - If the answer is not present, simple inform the user that the answer is not present in the document
 
 """
+
+BASE_DIR = Path
+
+BASE_DIR = Path(__file__).resolve().parent
+
+VECTOR_DB_PATH = BASE_DIR / "data" / "vector_db"

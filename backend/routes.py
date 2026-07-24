@@ -1,8 +1,12 @@
-from fastapi import APIRouter,FileUpload
+from fastapi import APIRouter , UploadFile, File, HTTPException
 
 from core.loader import read_document
 
-from core.vectorstore import storage
+from core.retriever import retrieve
+
+from core.generation import generate
+
+from core.vectorstore import create_vectorstore , save_vectorstore , load_vectorstore
 
 from backend.schemas import UserRequest , UserResponse
 
@@ -10,7 +14,7 @@ router = APIRouter()
 
 @router.get("/")
 
-def health():
+async def health():
 
     return {
         "message" : "running"
@@ -18,24 +22,41 @@ def health():
 
 @router.post("/upload")
 
-def upload(file:FileUpload(...))->BinaryIO:
+async def upload(file:UploadFile = File(...)):
 
-    read_doc = read_document(file)
+    try:
 
-    if not read_doc:
-        return "Document could not be uploaded. Please Try Again"
+        read_doc = await read_document(file)
 
-    return read_doc
+        vectorstore = create_vectorstore(read_doc)
 
-@router.post("/chat")
+        save_vectorstore(vectorstore)
 
-def chat(query:UserRequest)->str:
+        return {
+            "message" : "Document uploaded successfully"
+        }
 
-    vectorstore = storage()
+    except Exception as e:
 
+        raise HTTPException(status_code=500,detail=str(e))
 
+@router.post("/chat",response_model=UserResponse)
 
-    response = UserResponse(query)
+async def chat(request:UserRequest)->UserResponse:
 
-    return response
+    try:
+
+        vectorstore = load_vectorstore()
+
+        docs = retrieve(request.query,vectorstore)
+
+        context = "\n\n".join(doc.page_content for doc in docs)
+
+        answer = generate(request.query,context)
+
+        return UserResponse(answer=answer)
+
+    except Exception as e:
+
+        raise HTTPException(status_code=500,detail=str(e))
 

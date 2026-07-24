@@ -2,7 +2,7 @@ import fitz
 
 import re
 
-from typing import BinaryIO
+from fastapi import UploadFile
 
 def clean_text(text:str)->str:
 
@@ -14,13 +14,15 @@ def clean_text(text:str)->str:
 
     return text.strip()
 
-def read_document(file:BinaryIO)->str:
+async def read_document(file:UploadFile)->str:
 
     """Extract text from the document"""
 
+    pdf_bytes = await file.read()
+
     text = ""
 
-    with fitz.open(stream=file.read(),filetype="pdf") as pdf:
+    with fitz.open(stream=pdf_bytes,filetype="pdf") as pdf:
         for page in pdf:
             page_text = page.get_text("text")
             if page_text:
