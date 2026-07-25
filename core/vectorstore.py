@@ -24,8 +24,16 @@ def save_vectorstore(vector_store: FAISS):
 
 
 def load_vectorstore() -> FAISS:
-    return FAISS.load_local(
+
+    db = FAISS.load_local(
         DB_PATH,
         embeddings,
         allow_dangerous_deserialization=True,
     )
+
+    print("\n=== load_vectorstore ===")
+    print(type(db))
+    print(db)
+    print("========================\n")
+
+    return db

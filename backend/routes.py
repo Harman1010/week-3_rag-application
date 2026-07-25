@@ -4,6 +4,8 @@ from core.loader import read_document
 
 from core.retriever import retrieve
 
+import traceback
+
 from core.generation import generate
 
 from core.vectorstore import create_vectorstore , save_vectorstore , load_vectorstore
@@ -48,15 +50,19 @@ async def chat(request:UserRequest)->UserResponse:
 
         vectorstore = load_vectorstore()
 
+        print("\n=== chat route ===")
+        print(type(vectorstore))
+        print("==================\n")
+
         docs = retrieve(request.query,vectorstore)
 
         context = "\n\n".join(doc.page_content for doc in docs)
 
         answer = generate(request.query,context)
 
-        return UserResponse(answer=answer)
+        return UserResponse(response=answer)
 
-    except Exception as e:
-
-        raise HTTPException(status_code=500,detail=str(e))
+    except Exception:
+        traceback.print_exc()
+        raise
 

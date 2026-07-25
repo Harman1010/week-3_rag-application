@@ -6,13 +6,9 @@ from core.retriever import retrieve
 
 from core.llm import llm
 
-def generate(query:str,vector_store:FAISS) -> str:
+def generate(query: str,context: str) -> str:
 
     """Provides the answer based on the context"""
-
-    retrieval = retrieve(query,vector_store)
-
-    context = "\n\n".join(retrieval)
 
     prompt = f"""
 

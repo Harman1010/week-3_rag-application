@@ -25,8 +25,6 @@ Instructions:
 
 """
 
-BASE_DIR = Path
-
 BASE_DIR = Path(__file__).resolve().parent
 
 VECTOR_DB_PATH = BASE_DIR / "data" / "vector_db"
