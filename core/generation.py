@@ -4,13 +4,15 @@ from langchain_community.vectorstores import FAISS
 
 from core.retriever import retrieve
 
-from llm import llm
+from core.llm import llm
 
 def generate(query:str,vector_store:FAISS) -> str:
 
     """Provides the answer based on the context"""
 
-    context = retrieve(query,vector_store)
+    retrieval = retrieve(query,vector_store)
+
+    context = "\n\n".join(retrieval)
 
     prompt = f"""
 
