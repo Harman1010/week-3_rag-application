@@ -117,7 +117,7 @@ project/
 - Microsoft Word (.docx)
 - Plain Text (.txt)
 
-## Installation Guide
+## How to run
 
 ### 1. Clone the repository
 
